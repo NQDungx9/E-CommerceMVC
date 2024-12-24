@@ -1,0 +1,28 @@
+﻿@if (TempData["message"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.success('@TempData["message"]');
+    </script>
+}
+
+@if (TempData["delete"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        @* toastr.success('@TempData["delete"]'); *@
+            toastr.error('@TempData["delete"]');
+    </script>
+}
+
+@if (TempData["clear"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        @* toastr.success('@TempData["delete"]'); *@
+            toastr.error('@TempData["clear"]');
+    </script>
+}

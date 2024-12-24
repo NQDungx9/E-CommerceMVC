@@ -1,0 +1,77 @@
+﻿@model IEnumerable<OrderModel>
+@{
+    ViewData["title"] = "Listed Order";
+}
+
+<partial name="Notification" />
+
+<h1>Order Listed</h1>
+
+<div style="padding-left: 10px;">
+    <table class="table table-bordered" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+                <th>@Html.DisplayNameFor(model => model.First().OrderCode)</th>
+                <th>@Html.DisplayNameFor(model => model.First().UserName)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CreatedDate)</th>
+                <th>@Html.DisplayNameFor(model => model.First().ShippingCost)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CouponCode)</th>
+                <th>@Html.DisplayNameFor(model => model.First().PaymentMethod)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                var i = 1;
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@i</td>
+                        @* <td>@Html.DisplayFor(modelItem => item.Id)</td> *@
+                        <td>@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                        <td>@item.ShippingCost.ToString("#,##0 VND")</td>
+                        <td>@Html.Raw(item.CouponCode)</td>
+                        @* <td>@Html.DisplayFor(modelItem => item.Status)</td> *@
+                        <td>
+                            @if (item.PaymentMethod == "COD")
+                            {
+                                <span class="text text-primary">@item.PaymentMethod</span>
+                            }
+                            else if (item.PaymentMethod != "COD")
+                            {
+                                <span class="text text-primary">@item.PaymentMethod</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status == 1)
+                            {
+                                <span class="text text-success">Đơn Hàng Mới</span>
+                            }
+                            else if (item.Status == 2)
+                            {
+                                <span class="text text-success">Đã xử lý</span>
+                            }
+                            else
+                            {
+                                <span class="text text-danger">Đã Hủy</span>
+                            }
+                        </td>
+                        <td style="width: 130px">
+                            <a class="btn btn-primary btn-sm" asp-area="admin" asp-controller="Order" asp-action="ViewOrder" asp-route-ordercode="@item.OrderCode">View</a>
+                            <a class="btn btn-danger btn-sm confirmDeletion" asp-area="admin" asp-controller="Order" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

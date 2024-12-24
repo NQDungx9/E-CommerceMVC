@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewData["title"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/prettyPhoto.css" rel="stylesheet">
+    <link href="~/css/price-range.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+    <link rel="stylesheet" href="~/Content/clients/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="~/Content/clients/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Content/clients/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Content/clients/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/clients/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+</head><!--/head-->
+
+<body>
+    <header id="header">
+        <!--header-->
+        <div class="header_top">
+            <!--header_top-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="contactinfo">
+                            <ul class="nav nav-pills">
+                                <li><a href="#"><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
+                                <li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="social-icons pull-right">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header_top-->
+
+        <div class="header-middle">
+            <!--header-middle-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="logo pull-left">
+                            <a asp-controller="Home" asp-action="Index"><img src="~/media/contacts/8dda6c84-440e-4ef1-8592-93781b5a498a_evos-divine-logo-07ABB58203-seeklogo.com.png" alt="" style="width:100px;"/></a>
+                        </div>
+                        @* <div class="btn-group pull-right">
+                        <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
+                        USA
+                        <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                        <li><a href="#">Canada</a></li>
+                        <li><a href="#">UK</a></li>
+                        </ul>
+                        </div>
+
+                        <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
+                        DOLLAR
+                        <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                        <li><a href="#">Canadian Dollar</a></li>
+                        <li><a href="#">Pound</a></li>
+                        </ul>
+                        </div>
+                        </div> *@
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="shop-menu pull-right">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <div>
+                                        <ul class="nav navbar-nav">
+                                            <li><a asp-action="History" asp-controller="Account"><i class="fa fa-user"></i> Order History</a></li>
+                                            <li><a asp-action="WishList" asp-controller="Home"><i class="fa fa-star"></i> Wishlist</a></li>
+                                            @* <li><a asp-action="Compare" asp-controller="Home"><i class="fa fa-star"></i> Compare</a></li> *@
+                                            <li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                            <li class="dropdown">
+                                                <a href="#">Hi, @User.Identity.Name<i class="fa fa-angle-down"></i></a>
+                                                <ul role="menu" class="sub-menu" style="width:140px;">
+                                                    <li><a asp-area="Admin" asp-controller="Product" asp-action="Index" style="color: white; background: bottom;"><i class="fa fa-star"></i> Admin</a></li>
+                                                    <li><a asp-controller="Account" asp-action="UpdateAccount" style="color: white; background: bottom;"><i class="fa fa-user"></i> Account</a></li>
+                                                    <li><a asp-action="Logout" asp-controller="Account" style="color: white; background: bottom;"><i class="fa fa-user"></i> Logout</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <ul class="nav navbar-nav">
+                                            <li><a asp-action="History" asp-controller="Account"><i class="fa fa-user"></i> Order History</a></li>
+                                            <li><a asp-action="WishList" asp-controller="Home"><i class="fa fa-star"></i> Wishlist</a></li>
+                                            @* <li><a asp-action="Compare" asp-controller="Home"><i class="fa fa-star"></i> Compare</a></li> *@
+                                            <li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                            <li class="dropdown">
+                                                <a href="#">Hi, @User.Identity.Name<i class="fa fa-angle-down"></i></a>
+                                                <ul role="menu" class="sub-menu" style="width:140px;">
+                                                    <li><a asp-controller="Account" asp-action="UpdateAccount" style="color: white; background: bottom;"><i class="fa fa-user"></i> Account</a></li>
+                                                    <li><a asp-action="Logout" asp-controller="Account" style="color: white; background: bottom;"><i class="fa fa-user"></i> Logout</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                                
+                            }
+                            else
+                            {
+                                <ul class="nav navbar-nav">
+                                    <li><a asp-action="Index" asp-controller="Cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                    <li><a asp-controller="account" asp-action="login"><i class="fa fa-lock"></i> Login</a></li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--/header-middle-->
+        <div class="header-bottom">
+            <!--header-bottom-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="mainmenu pull-left">
+                            <ul class="nav navbar-nav collapse navbar-collapse">
+                                <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+                                <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <form asp-controller="Product" asp-action="Search" method="post">
+                            <div class="search_box pull-right">
+                                <input type="text" placeholder="Search" name="searchTerm" />
+                                <button class="btn btn-warning" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--/header-->
+    <!--/slider-->
+    @* @if (User.Identity.IsAuthenticated)
+
+    {
+    <li class="dropdown">
+    <a class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+    Hi, @User.Identity.Name
+    <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1">Account</a></li>
+    <li role="presentation"><a asp-area="Admin" asp-controller="Product" asp-action="Index" role="menuitem" tabindex="-1">Admin</a></li>
+    <li role="presentation"><a asp-action="Logout" asp-controller="Account" role="menuitem" tabindex="-1">Log Out</a></li>
+    </ul>
+    </li>
+    }
+
+    else
+
+    {
+    <li><a asp-controller="account" asp-action="login"><i class="fa fa-lock"></i> Login</a></li>
+    } *@
+    <section>
+        <div class="container">
+            <div class="row">
+                <partial name="Notification" />
+                @RenderBody()
+            </div>
+        </div>
+    </section>
+
+    <partial name="_Footer" />
+
+    <!-- jQuery -->
+    <script src="~/Content/clients/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Content/clients/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/Content/clients/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="~/Content/clients/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- InputMask -->
+    <script src="~/Content/clients/plugins/moment/moment.min.js"></script>
+    <script src="~/Content/clients/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="~/Content/clients/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="~/Content/clients/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/Content/clients/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="~/Content/clients/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- BS-Stepper -->
+    <script src="~/Content/clients/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <!-- dropzonejs -->
+    <script src="~/Content/clients/plugins/dropzone/min/dropzone.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/Content/clients/dist/js/adminlte.min.js"></script>
+    <script src="~/Scripts/autoNumeric-1.9.45.js"></script>
+
+    <script src="~/backend/js/site.js"></script>
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/price-range.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/main.js"></script>
+    @await RenderSectionAsync("scripts", required: false)
+</body>
+</html>

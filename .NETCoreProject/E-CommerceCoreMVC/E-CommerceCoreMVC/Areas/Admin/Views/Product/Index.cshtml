@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ProductModel>
+@{
+    ViewData["title"] = "Listed Product";
+    var i = (ViewBag.Pager.CurrentPage - 1) * ViewBag.Pager.PageSize + 1; // Tính số thứ tự bắt đầu từ trang hiện tại
+    Paginate pager = ViewBag.Pager ?? new Paginate(0, 1, 5); // Kiểm tra nếu Pager là null thì khởi tạo mặc định
+}
+
+<partial name="Notification" />
+
+<h1>Product Listed</h1>
+
+<div style="padding-left: 10px;">
+    <p>
+        <a class="btn btn-success" asp-controller="Product" asp-action="Create">Create New</a>
+    </p>
+    <table class="table table-bordered" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Image)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Quantity)</th>
+                <th>Product Quantity</th>
+                <th>Product Sold</th>
+                <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Price)</th>
+                <th>Gái Nhập</th>
+                <th>@Html.DisplayNameFor(model => model.First().Slug)</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@i</td> <!-- Hiển thị chỉ số dòng -->
+                    <td><img src="~/media/products/@item.Image" width="90px" /></td>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td><a asp-controller="Product" asp-action="AddQuantity" asp-route-id="@item.Id">Add Quantity</a></td>
+                    <td>@item.Sold</td>
+                    <td>@Html.Raw(item.Description)</td>
+                    <td>@item.Price.ToString("#,##00 VND")</td>
+                    <td>@item.CapitalPrice.ToString("#,##00 VND")</td>
+                    <td>@item.Slug</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Brand.Name</td>
+                    <td style="width: 130px">
+                        <a class="btn btn-warning btn-sm" asp-area="admin" asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-danger btn-sm confirmDeletion" asp-area="admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+                i++;
+                <!-- Tăng giá trị i -->
+            }
+        </tbody>
+    </table>
+
+    @if (!Model.Any())
+    {
+        <p>No products available.</p>
+    }
+
+    <partial name="_Paging" model="ViewBag.Pager" />
+</div>

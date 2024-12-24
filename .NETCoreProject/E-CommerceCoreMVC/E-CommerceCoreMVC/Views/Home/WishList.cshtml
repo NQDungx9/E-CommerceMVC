@@ -1,0 +1,79 @@
+﻿@model IEnumerable<WishlistModel>
+
+@{
+    ViewData["title"] = "Yêu Thích";
+    int i = 1;
+}
+<h2>WishList</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Image</th>
+            <th scope="col">Price</th>
+            <th scope="col">Action</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@i</th>
+                <td>@item.Product.Name</td> <!-- Hiển thị tên sản phẩm -->
+                <td><img src="~/media/products/@item.Product.Image" width="130px" height="100px" /></td> <!-- Hiển thị ảnh -->
+                <td>@item.Product.Price.ToString("#,##0 VND")</td> <!-- Hiển thị giá -->
+                <td>
+                    <a class="btn btn-danger btn-sm confirmDeletion"
+                       asp-controller="Home"
+                       asp-action="DeleteWishList"
+                       asp-route-id="@item.Id">
+                        <!-- Truyền Id của wishlist -->
+                        Delete
+                    </a>
+                </td>
+                @if(item.Product.Quantity > 0)
+                {
+                    <td>
+                        <a class="btn btn-default add-to-cart" data-product-id="@item.Product.Id">Add To Cart</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a class="btn btn-default add-to-cart" style="color:red">Hết Hàng</a>
+                    </td>
+                }
+                
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".add-to-cart").click(function () {
+                var Id = $(this).data("product-id");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Add", "Cart")",
+                    data: { Id: Id },
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success("Thêm giỏ hàng thành công");
+                        } else {
+                            toastr.error("thêm giỏ hàng thất bại: " + result.message);
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Có lỗi xảy ra. Vui lòng thử lại.");
+                    }
+                });
+            });
+        });
+    </script>
+}

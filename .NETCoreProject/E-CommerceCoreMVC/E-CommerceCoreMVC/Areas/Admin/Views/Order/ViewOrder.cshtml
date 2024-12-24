@@ -1,0 +1,128 @@
+﻿@model IEnumerable<OrderDetails>
+
+@{
+    ViewData["title"] = "Chi Tiết Đơn Hàng";
+    decimal total = 0;
+    decimal subtotal = 0;
+}
+
+<h1>Order Details</h1>
+
+<div style="padding-left: 10px;">
+    <table class="table table-bordered" id="details_order">
+        <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Order Code</th>
+                <th>User Name</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>SubTotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    subtotal = item.Quantity * item.Price;
+                    total = total + subtotal + @ViewBag.ShippingCost;
+                    <tr>
+                        <input type="hidden" asp-for="@item.OrderCode" class="getId" value="@item.OrderCode"/>
+                        <td>@item.Id</td>
+                        <td>@item.OrderCode</td>
+                        <td>@item.UserName</td>
+                        <td>@item.Product.Name</td>
+                        <td>$@item.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>@subtotal.ToString("C")</td>
+                    </tr>
+                }
+                <tr>
+                    <td style="text-align: right;">Total: @total.ToString("#,##0 VND")</td>
+                    <td style="text-align: right;">Ship Cost: @ViewBag.ShippingCost.ToString("#,##0 VND")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if(ViewBag.Status == 1 || ViewBag.Status == 2)
+    {
+        @if(ViewBag.Status == 1)
+        {
+            <select class="form-control select-update-order">
+                <option selected value="1">Đơn Hàng Mới</option>
+                <option value="2">Đã xử lý</option>
+            </select>
+        }
+        else if(ViewBag.Status == 2)
+        {
+            <select class="form-control select-update-order">
+                <option value="1">Đơn Hàng Mới</option>
+                <option selected value="2">Đã xử lý</option>
+            </select>
+        }
+
+    }
+    
+</div>
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.js"></script>
+    <!-- Buttons Plugins -->
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js"></script>
+    <script>
+        new DataTable('#details_order', {
+            layout: {
+                topStart: {
+                    buttons: ['pdf', 'print']
+                }
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select-update-order').change(function () {
+                debugger;
+
+                // Lấy giá trị `ordercode` từ thẻ input.hidden trong dòng <tr> tương ứng
+                var ordercode = $('.getId').val();
+                var status = $(this).val(); // Lấy giá trị trạng thái từ <select>
+
+                if (!ordercode) {
+                    toastr.success("Không tìm thấy mã đơn hàng.");
+                    return;
+                }
+                if (!status) {
+                    toastr.message("Vui lòng chọn trạng thái đơn hàng.");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder")",
+                    data: { ordercode: ordercode, status: status }, // Gửi đúng tham số với tên 'id' và 'status'
+                    success: function (result) {
+                        if (result.success) {
+                            toastr.success("Cập nhật đơn hàng thành công");
+                        } else {
+                            toastr.error("Cập nhật đơn hàng thất bại: " + result.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Đã xảy ra lỗi trong quá trình xử lý: " + error);
+                    }
+                });
+            });
+        });
+
+    </script>
+}

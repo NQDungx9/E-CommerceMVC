@@ -1,0 +1,47 @@
+﻿@* @model IEnumerable<AppUserModel>*@
+@model IEnumerable<UserWithRoleViewModel>
+@{
+    ViewData["title"] = "User List";
+    var i = 1;
+}
+
+<partial name="Notification" />
+
+<h1>User Listed</h1>
+
+<div style="padding-left: 10px;">
+    <p>
+        <a class="btn btn-success" asp-controller="User" asp-action="Create">Create New</a>
+    </p>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>UserName</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    @* <td>@Html.DisplayFor(modelItem => item.Id)</td> *@
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.RoleName</td>
+                    <td style="width: 130px">
+                        <a class="btn btn-warning btn-sm" asp-area="admin" asp-controller="User" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
+                        <a class="btn btn-danger btn-sm confirmDeletion" asp-area="admin" asp-controller="User" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>

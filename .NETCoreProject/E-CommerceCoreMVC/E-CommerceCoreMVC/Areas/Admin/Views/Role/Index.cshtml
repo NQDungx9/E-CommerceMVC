@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole>
+@{
+    ViewData["title"] = "Quyền";
+}
+<partial name="Notification" />
+
+<h1>Role Listed</h1>
+
+<div style="padding-left: 10px;">
+    <p>
+        <a class="btn btn-success" asp-controller="Role" asp-action="Create">Create New</a>
+    </p>
+    <table class="table table-bordered" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().Id)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                var i = 1;
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td style="width: 130px">
+                            <a class="btn btn-warning btn-sm" asp-area="admin" asp-controller="Role" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a class="btn btn-danger btn-sm confirmDeletion" asp-area="admin" asp-controller="Role" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,245 @@
+﻿@model StatisticalModel
+@{
+    ViewData["title"] = "Dashboard";
+
+
+}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+<partial name="Notification" />
+
+<h1>Dashboard</h1>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.CountUser</h3>
+
+                        <p>User Registrations</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.CountProduct</h3>
+
+                        <p>Products</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@ViewBag.CountCategory</h3>
+
+                        <p>Categories</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>@ViewBag.CountOrder</h3>
+
+                        <p>Total Order</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div>
+            <h2>Biểu Đồ Thống Kê</h2>
+            <div class="row">
+                <div class="col-md-5">
+                    <label style="margin-right: 5px;">Lọc theo:</label>
+                    <select class="form-control filter-select">
+                        <option value="30">---Lọc dữ liệu---</option>
+                        <option value="7">7 ngày trước</option>
+                        <option value="30">Tháng vừa qua</option>
+                        <option value="90">3 tháng trước</option>
+                        <option value="365">1 năm trươc</option>
+                    </select>
+
+                </div>
+                <div class="col-md-5">
+                    <div>
+                        <div>
+                            <label style="margin-right: 5px;">Từ ngày:</label>
+                            <input asp-for="@Model.DateCreated" id="date_from" type="date" class="form-control" style="margin-right: 10px;">
+                            <label style="margin-right: 5px;">Đến ngày:</label>
+                            <input asp-for="@Model.DateCreated" id="date_to" type="date" class="form-control" style="margin-right: 10px;">
+                        </div>
+                        <div style="padding-left: 403px;padding-top: 10px;">
+                            <button style="width:100px;" id="FilterButton" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="myfirstchart" style="height: 250px;"></div>
+        </div>
+        <!-- /.row (main row) -->
+    </div><!-- /.container-fluid -->
+</section>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var CharMorris = new Morris.Line({
+                element: 'myfirstchart', // ID of the chart container
+                data: [], // Data for the chart
+                xkey: 'date', // X-axis key
+                xLabelFormat: function (x) {
+                    return new Date(x).toLocaleDateString('vi-VN'); // Format date for X-axis labels
+                },
+                ykeys: ['sold', 'quantity', 'revenue', 'profit'], // Keys for Y-axis values
+                labels: ['Đơn hàng', 'Số lượng bán ra', 'Doanh thu', 'Lợi nhuận'], // Labels for the Y-axis keys
+                parseTime: true, // Enable date parsing
+                resize: true, // Make the chart responsive
+                lineColors: ['#0b62a4', '#7a92a3', '#4da74d', '#d9534f'], // Colors for lines
+                hideHover: 'auto' // Hide hover details when mouse leaves chart area
+            });
+
+            // Fetch data from the server using AJAX
+            $.ajax({
+                url: '@Url.Action("GetChartData", "Dashboard")', // URL to fetch chart data
+                type: "POST", // HTTP method
+                dataType: "json", // Expected data type
+                success: function (data) {
+                    if (data) {
+                        CharMorris.setData(data.map(function (item) {
+                            // Chuyển đổi ngày từ dd/MM/yyyy sang yyyy-MM-dd
+                            var dateParts = item.date.split('/');
+                            var formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; // Rearrange to "yyyy-MM-dd"
+
+                            return {
+                                date: formattedDate, // Dùng định dạng yyyy-MM-dd
+                                sold: item.sold,
+                                quantity: item.quantity,
+                                revenue: item.revenue,
+                                profit: item.profit
+                            };
+                        }));
+                    } else {
+                        console.warn("No data recevived for Morris chart");
+                        CharMorris.setData([]);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching chart data:", error);
+                }
+            });
+
+            $("#FilterButton").click(function () {
+                var fromDate = $("#date_from").val(); // Lấy giá trị từ ngày
+                var toDate = $("#date_to").val();
+
+                $.ajax({
+                    url: '@Url.Action("FilterData", "Dashboard")',
+                    type: 'POST',
+                    dataType: "json",
+                    data: { fromDate: fromDate, toDate: toDate },
+                    success: function (data) {
+                        if (data) {
+                            CharMorris.setData(data.map(function (item) {
+                                var dateParts = item.date.split('/');
+                                var formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                                return {
+                                    date: formattedDate, 
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else {
+                            console.warn("No data received for Morris chart update.");
+                            CharMorris.setData([]); // Cập nhật biểu đồ với dữ liệu rỗng
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            });
+
+
+            $('.filter-select').on('change', function () {
+                var days = $(this).val();
+                var endDate = new Date();
+                var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
+
+                $.ajax({
+                    url: '@Url.Action("GetChartDataBySelect", "Dashboard")',
+                    type: 'POST',
+                    dataType: "json",
+                    data: {
+                        startDate: startDate.toISOString().split('T')[0], // Format ngày bắt đầu (yyyy-MM-dd)
+                        endDate: endDate.toISOString().split('T')[0]     // Format ngày kết thúc (yyyy-MM-dd)
+                    },
+                    success: function (data) {
+                        if (data) {
+                            CharMorris.setData(data.map(function (item) {
+                                // Chuyển đổi ngày từ dd/MM/yyyy sang yyyy-MM-dd
+                                var dateParts = item.date.split('/');
+                                var formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+                                return {
+                                    date: formattedDate, // Dùng định dạng yyyy-MM-dd
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else {
+                            console.warn("No data received for Morris chart update.");
+                            CharMorris.setData([]); // Cập nhật biểu đồ với dữ liệu rỗng
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+            });
+
+
+
+        });
+    </script>
+}
+
+

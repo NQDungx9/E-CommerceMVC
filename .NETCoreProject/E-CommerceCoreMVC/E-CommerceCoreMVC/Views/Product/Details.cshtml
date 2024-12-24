@@ -1,0 +1,384 @@
+﻿@model ProductDetailsViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .comment-box {
+        border: 1px solid #ddd; /* Viền xung quanh */
+        padding: 15px; /* Khoảng cách bên trong */
+        margin-bottom: 20px; /* Khoảng cách giữa các bình luận */
+        border-radius: 5px; /* Bo góc */
+        background-color: #f9f9f9; /* Màu nền nhạt */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tạo đổ bóng */
+    }
+
+        .comment-box ul {
+            list-style: none; /* Loại bỏ dấu đầu dòng của danh sách */
+            padding: 0;
+            margin: 0 0 10px 0; /* Khoảng cách bên dưới danh sách */
+        }
+
+        .comment-box li {
+            display: inline-block; /* Hiển thị ngang các mục */
+            margin-right: 15px; /* Khoảng cách giữa các mục */
+            color: #555; /* Màu chữ */
+        }
+
+        .comment-box p {
+            margin: 0; /* Loại bỏ khoảng cách mặc định */
+            color: #333; /* Màu chữ bình luận */
+        }
+
+</style>
+<div class="row">
+    <div class="col-sm-3">
+        @* @Html.Partial("_SidebarPartial") *@
+        <partial name="_SidebarPartial" />
+    </div>
+
+    <div class="col-sm-9 padding-right">
+        <div class="product-details">
+            <!--product-details-->
+            <div class="col-sm-5">
+                <div class="view-product">
+                    <img src="~/media/products/@Model.ProductDetails.Image" alt="" />
+                </div>
+                @* <div id="similar-product" class="carousel slide" data-ride="carousel">
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                <div class="item active">
+                <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+                </div>
+                <div class="item">
+                <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+                </div>
+                <div class="item">
+                <a href=""><img src="images/product-details/similar1.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar2.jpg" alt=""></a>
+                <a href=""><img src="images/product-details/similar3.jpg" alt=""></a>
+                </div>
+
+                </div>
+
+                <!-- Controls -->
+                <a class="left item-control" href="#similar-product" data-slide="prev">
+                <i class="fa fa-angle-left"></i>
+                </a>
+                <a class="right item-control" href="#similar-product" data-slide="next">
+                <i class="fa fa-angle-right"></i>
+                </a>
+                </div> *@
+
+            </div>
+            <div class="col-sm-7">
+                <div class="product-information" style="width: 560px;right: 30px;">
+                    <!--/product-information-->
+                    <h2>@Model.ProductDetails.Name</h2>
+                    <span>
+                        <span>@Model.ProductDetails.Price.ToString("#,##00 VND")</span>
+                        @if(Model.ProductDetails.Quantity > 0)
+                        {
+                            <label>Quantity:</label>
+                            <input type="number" id="quantity-@Model.ProductDetails.Id" class="product-quantity" value="1" min="1" />
+                            <button type="button" class="btn btn-fefault cart" data-product-id="@Model.ProductDetails.Id">
+                                <i class="fa fa-shopping-cart"></i>
+                                Add to cart
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-fefault cart" style="color:red;background-color:whitesmoke;">
+                                <i class="fa fa-shopping-cart"></i>
+                                Hết Hàng
+                            </button>
+                        }
+                        
+                        
+                    </span>
+                    <p><b>Availability:</b> In Stock</p>
+                    <p><b>Condition:</b> New</p>
+                    <p><b>Brand:</b> @Model.ProductDetails.Brand.Name</p>
+                    <p><b>Category:</b> @Model.ProductDetails.Category.Name</p>
+                    <a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
+                </div><!--/product-information-->
+            </div>
+        </div><!--/product-details-->
+
+        <div class="category-tab shop-details-tab">
+            <!--category-tab-->
+            <div class="col-sm-12">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+                    <li><a href="#reviews" data-toggle="tab">Reviews</a></li>
+                    <li><a href="#companyprofile" data-toggle="tab">Company Profile</a></li>
+                    <li><a href="#tag" data-toggle="tab">Tag</a></li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="details">
+                    @Html.Raw(Model.ProductDetails.Description)
+                </div>
+
+                <div class="tab-pane fade" id="companyprofile">
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery1.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery3.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery2.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery4.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tag">
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery1.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery2.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery3.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="images/home/gallery4.jpg" alt="" />
+                                    <h2>$56</h2>
+                                    <p>Easy Polo Black Edition</p>
+                                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <div class="comments-section">
+                <h3>Comments:</h3>
+                @if (Model.Comments != null && Model.Comments.Count > 0)
+                {
+                <ul>
+                @foreach (var comment in Model.Comments)
+                {
+                <li>
+                <strong>@comment.Name</strong>: @comment.Comment
+                </li>
+                }
+                </ul>
+                }
+                else
+                {
+                <p>No comments yet. Be the first to comment!</p>
+                }
+                </div> *@
+
+                <div class="tab-pane fade" id="reviews">
+                    <div class="col-sm-12">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <div class="comment-box">
+                                <ul>
+                                    <li><a><i class="fa fa-user"></i>@comment.Name</a></li>
+                                    <li><a><i class="fa fa-clock-o"></i>@comment.Email</a></li>
+                                    <li><a><i class="fa fa-calendar-o"></i>@comment.NgayDang</a></li>
+                                </ul>
+                                <p>@Html.Raw(comment.Comment)</p>
+                            </div>
+                        }
+                        <p><b>Write Your Review</b></p>
+
+                        <form autocomplete="off" asp-action="CommentProduct" asp-controller="Product" method="POST">
+                            <span>
+                                <input type="hidden" asp-for="@Model.ProductDetails.Id" name="ProductId" />
+                                <input name="Star" type="hidden" value="4" />
+                                <input asp-for="@Model.Name" type="text" placeholder="Your Name" />
+                                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                                <input asp-for="@Model.Email" type="email" placeholder="Email Address" />
+                                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                            </span>
+                            <textarea asp-for="@Model.Comment"></textarea>
+                            <span asp-validation-for="@Model.Comment" class="text-danger"></span>
+                            <b>Rating: </b> <img src="images/product-details/rating.png" alt="" />
+                            <button type="submit" class="btn btn-default pull-right">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div><!--/category-tab-->
+
+        <div class="recommended_items">
+            <!--recommended_items-->
+            <h2 class="title text-center">Related Products</h2>
+
+            <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        @foreach (var relatedProducts in ViewBag.RelatedProducts as IEnumerable<ProductModel>)
+                        {
+                            <div class="col-sm-4">
+                                <div class="product-image-wrapper">
+                                    <div class="single-products">
+                                        <div class="productinfo text-center">
+                                            <a asp-action="Details" asp-controller="Product" asp-route-Id="@relatedProducts.Id">
+                                                <img src="~/media/products/@relatedProducts.Image" alt="@relatedProducts.Name" style="width:200px;" />
+                                                <h2>@relatedProducts.Price.ToString("#,#00 VND")</h2>
+                                                <p>@relatedProducts.Name</p>
+                                            </a>
+                                            @if (relatedProducts.Quantity > 0)
+                                            {
+                                                <a class="btn btn-default cart" data-product-id="@relatedProducts.Id"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-default cart"><i class="fa fa-shopping-cart" style="color:red;"></i>Hết Hàng</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @* <div class="item">
+                    <div class="col-sm-4">
+                    <div class="product-image-wrapper">
+                    <div class="single-products">
+                    <div class="productinfo text-center">
+                    <img src="images/home/recommend1.jpg" alt="" />
+                    <h2>$56</h2>
+                    <p>Easy Polo Black Edition</p>
+                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="col-sm-4">
+                    <div class="product-image-wrapper">
+                    <div class="single-products">
+                    <div class="productinfo text-center">
+                    <img src="images/home/recommend2.jpg" alt="" />
+                    <h2>$56</h2>
+                    <p>Easy Polo Black Edition</p>
+                    <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div> *@
+                </div>
+                <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+        </div><!--/recommended_items-->
+
+    </div>
+</div>
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".cart").click(function () {
+                var productId = $(this).data("product-id");
+                var quantity = $(`#quantity-${productId}`).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Cart/Add",
+                    data: { Id: productId, Quantity: quantity },
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success("Sản phẩm đã được thêm vào giỏ hàng!");
+                            $("#total-items").text(response.totalItems);
+                        } else {
+                            toastr.error("Không thể thêm vào giỏ.");
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Không thể thêm sản phẩm vào giỏ hàng.");
+                    }
+                });
+            });
+        });
+
+    </script>
+
+}
